@@ -1,23 +1,37 @@
-public class Main {
+import java.io.*;
+
+public class PersonSerialization {
+    private static final String FILE_NAME = "person.dat"; // Имя файла для сериализации
+
     public static void main(String[] args) {
-        PersonService service = new PersonService();
+        // Создаем объект Person
+        Person person = new Person("Alice", 30);
 
-        // Добавляем людей
-        service.addPerson(new Person("Alice", 30));
-        service.addPerson(new Person("Bob", 25));
+        // Сериализация
+        serialize(person);
 
-        // Получаем и выводим всех
-        System.out.println("Все люди:");
-        service.getAllPersons().forEach(System.out::println);
+        // Десериализация
+        Person deserializedPerson = deserialize();
+        System.out.println("Десериализованный объект: " + deserializedPerson);
+    }
 
-        // Обновляем
-        service.updatePerson(1L, "Alice Updated", 35);
+    // Метод для сериализации объекта в файл
+    private static void serialize(Person person) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
+            oos.writeObject(person);
+            System.out.println("Объект успешно сериализован.");
+        } catch (IOException e) {
+            System.err.println("Ошибка при сериализации: " + e.getMessage());
+        }
+    }
 
-        // Удаляем
-        service.deletePerson(2L);
-
-        // Повторно выводим всех
-        System.out.println("После обновления и удаления:");
-        service.getAllPersons().forEach(System.out::println);
+    // Метод для десериализации объекта из файла
+    private static Person deserialize() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
+            return (Person) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Ошибка при десериализации: " + e.getMessage());
+        }
+        return null;
     }
 }
