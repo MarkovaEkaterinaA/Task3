@@ -1,22 +1,23 @@
 import jakarta.persistence.*;
+import java.io.Serializable;
 
-@Entity
-@Table(name = "person")
-public class Person {
+@Entity // Указывает, что это JPA-сущность
+@Table(name = "person") // Название таблицы в базе данных
+public class Person implements Serializable { // Интерфейс Serializable для сериализации
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Автоинкремент ID
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false) // Поле name в таблице
     private String name;
 
-    @Column(name = "age", nullable = false)
+    @Column(name = "age", nullable = false) // Поле age в таблице
     private int age;
 
-    // Конструкторы
-    public Person() {
-    }
+    // Конструктор без параметров (обязательно для JPA)
+    public Person() {}
 
+    // Конструктор для создания объектов
     public Person(String name, int age) {
         this.name = name;
         this.age = age;
@@ -47,8 +48,10 @@ public class Person {
         this.age = age;
     }
 
+    // Переопределение toString() для удобного вывода
     @Override
     public String toString() {
         return "Person{id=" + id + ", name='" + name + "', age=" + age + "}";
     }
 }
+
